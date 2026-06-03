@@ -6,15 +6,20 @@
     <style>
         /* 1. ご提示いただいたレスポンシブCSSをそのまま適用 */
         .iframe-wrapper {
+            display: flex;
+            justify-content: center; /* 左右の中央揃え */
+            align-items: center;    /* 上下の中央揃え */
             position: relative;
             width: 100%;
-            max-width: 1515px; /* 最大幅の制限（お好みで外してもOKです） */
             margin: 0 auto;
             aspect-ratio: 16 / 9; /* 縦横比（16:9の場合） */
             background: #000;      /* 動画読み込み前の黒背景 */
         }
 
         .iframe-wrapper iframe {
+            display: flex;
+            justify-content: center; /* 左右の中央揃え */
+            align-items: center;    /* 上下の中央揃え */
             position: absolute;
             top: 0;
             left: 0;
