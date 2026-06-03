@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>YouTube 連続再生</title>
     <style>
-        /* 画面サイズに合わせるレスポンシブ設定 */
         .video-container {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
             aspect-ratio: 16 / 9;
+            background: #000; /* 読み込み前は黒背景 */
         }
         iframe {
             width: 100%;
@@ -21,14 +21,16 @@
 <body>
 
     <div class="video-container">
-        <!-- プレイヤーがここに生成されます -->
+        <!-- ここにYouTubeプレイヤーが作られます -->
         <div id="player"></div>
     </div>
 
     <script>
-        // YouTube Iframe API の読み込み
+        // 1. YouTube Iframe API のスクリプトを正しく作成
         var tag = document.createElement('script');
         tag.src = "https://youtube.com";
+        
+        // 2. [0]を記述して、最初のscript要素の前に挿入（修正ポイント）
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -38,18 +40,30 @@
                 height: '100%',
                 width: '100%',
                 videoId: 'QgwtzjC69Pk', // 1本目の動画ID
+                playerVars: {
+                    'playsinline': 1,  // スマホでインライン再生
+                    'rel': 0           // 関連動画を非表示
+                },
                 events: {
+                    'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
                 }
             });
         }
 
-        // 状態変更の検知
+        // 3. プレイヤーの準備ができたら自動再生（ミュート必須）
+        function onPlayerReady(event) {
+            event.target.mute(); // 音を消すことで自動再生ブロックを回避
+            event.target.playVideo();
+        }
+
+        // 4. 動画が終了した時の処理
         function onPlayerStateChange(event) {
-            // 再生終了（ENDED）になったら
+            // 再生終了（YT.PlayerState.ENDED）になったら
             if (event.data === YT.PlayerState.ENDED) {
                 // 2本目の動画を読み込んで再生
                 player.loadVideoById('qSZpqX4EB7s'); 
+                player.unMute(); // 2本目からはユーザーが操作した後なので音を出してもOK
             }
         }
     </script>
