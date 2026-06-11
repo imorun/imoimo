@@ -1,37 +1,297 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>芋芋</title>
-    <style>
-        /* 1. ご提示いただいたレスポンシブCSSをそのまま適用 */
-        .iframe-wrapper {
-            display: flex;
-            justify-content: center; /* 左右の中央揃え */
-            align-items: center;    /* 上下の中央揃え */
-            position: relative;
-            width: 100%;
-            margin: 0 auto;
-            aspect-ratio: 16 / 9; /* 縦横比（16:9の場合） */
-            background: #000;      /* 動画読み込み前の黒背景 */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .iframe-wrapper iframe {
-            display: flex;
-            justify-content: center; /* 左右の中央揃え */
-            align-items: center;    /* 上下の中央揃え */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-    </style>
+<title>芋芋</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    background:
+        linear-gradient(
+            135deg,
+            #111,
+            #222,
+            #111
+        );
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    color:white;
+    font-family:sans-serif;
+}
+
+/* タイトル */
+
+h1{
+
+    margin:20px 10px;
+
+    text-align:center;
+
+    font-size:
+        clamp(
+            2rem,
+            8vw,
+            5rem
+        );
+
+    font-weight:bold;
+
+    animation:
+        rainbow 3s linear infinite;
+
+    text-shadow:
+        0 0 10px currentColor,
+        0 0 20px currentColor,
+        0 0 40px currentColor;
+}
+
+.imo-title{
+    text-align:center;
+    font-size:clamp(2rem,8vw,5rem);
+    font-weight:bold;
+}
+
+.imo-title span{
+    display:inline-block;
+
+    animation:
+        rainbow 3s linear infinite,
+        bounce 1s ease-in-out infinite;
+
+    text-shadow:
+        0 0 10px currentColor,
+        0 0 20px currentColor,
+        0 0 40px currentColor;
+}
+
+.imo-title span:nth-child(1){
+    animation-delay:0s;
+}
+
+.imo-title span:nth-child(2){
+    animation-delay:.15s;
+}
+
+.imo-title span:nth-child(3){
+    animation-delay:.30s;
+}
+
+.imo-title span:nth-child(4){
+    animation-delay:.45s;
+}
+
+@keyframes bounce{
+
+    0%,100%{
+        transform:
+            translateY(0);
+    }
+
+    50%{
+        transform:
+            translateY(-25px)
+            rotate(-8deg);
+    }
+}
+
+
+@keyframes rainbow{
+
+    0%{
+        color:#ff0000;
+    }
+
+    16%{
+        color:#ff8800;
+    }
+
+    33%{
+        color:#ffff00;
+    }
+
+    50%{
+        color:#00ff00;
+    }
+
+    66%{
+        color:#00ffff;
+    }
+
+    83%{
+        color:#0000ff;
+    }
+
+    100%{
+        color:#ff00ff;
+    }
+}
+
+.video-card{
+
+    width:min(95%,1000px);
+
+    margin:30px auto;
+
+    padding:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.15),
+            rgba(255,255,255,.05)
+        );
+
+    border:3px solid rgba(
+        255,
+        255,
+        255,
+        .2
+    );
+
+    border-radius:25px;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:
+        0 0 20px rgba(255,0,255,.4),
+        0 0 40px rgba(0,255,255,.3),
+        0 0 60px rgba(255,255,0,.2);
+
+    transition:
+        transform .3s,
+        box-shadow .3s;
+}
+
+.video-card:hover{
+
+    transform:
+        translateY(-8px)
+        scale(1.02);
+
+    box-shadow:
+        0 0 30px rgba(255,0,255,.7),
+        0 0 60px rgba(0,255,255,.5),
+        0 0 90px rgba(255,255,0,.4);
+}
+
+.video-card::before{
+
+    content:"動画再生中";
+
+    display:block;
+
+    text-align:center;
+
+    font-size:1.1rem;
+
+    font-weight:bold;
+
+    margin-bottom:12px;
+
+    animation:
+        rainbow 3s linear infinite;
+}
+
+@media(max-width:768px){
+
+    .video-card{
+
+        width:98%;
+
+        padding:8px;
+
+        border-radius:15px;
+    }
+
+    .video-card::before{
+
+        font-size:.9rem;
+    }
+}
+
+/* レスポンシブ */
+
+.iframe-wrapper{
+
+    position:relative;
+
+    width:100%;
+
+    aspect-ratio:16/9;
+
+    overflow:hidden;
+
+    border-radius:15px;
+}
+
+.iframe-wrapper iframe{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+
+    height:100%;
+
+    border:none;
+}
+
+/* スマホ */
+
+@media(max-width:600px){
+
+    .video-card{
+        padding:8px;
+        border-radius:12px;
+    }
+
+    h1{
+        margin-top:15px;
+    }
+}
+
+</style>
 </head>
+
 <body>
-<div class="iframe-wrapper">
-  <iframe src="https://www.youtube.com/embed/QgwtzjC69Pk" frameborder="0" allowfullscreen></iframe>
+
+<h1 class="imo-title">
+    <span>芋</span>
+    <span>芋</span>
+    <span>無</span>
+    <span>限</span>
+</h1>
+
+<div class="video-card">
+
+    <div class="iframe-wrapper">
+
+        <iframe
+            src="https://www.youtube.com/embed/qSZpqX4EB7s?autoplay=1&mute=1&loop=1"
+            title="【MV】芋芋芋でいきましょう - ほぼフル・声ほぼ無し" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen>
+    </iframe>
+
+    </div>
+
 </div>
+
 </body>
 </html>
