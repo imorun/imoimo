@@ -321,12 +321,33 @@
 
 </body>
 <script>
+    let wakeLock = null;
+
+    // スリープ防止（Screen Wake Lock API）
+    const requestWakeLock = async () => {
+        if ('wakeLock' in navigator) {
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+            } catch (err) {
+                console.error(`${err.name}, ${err.message}`);
+            }
+        }
+    };
+
+    // 画面が戻った時にWake Lockを再取得
+    const handleVisibilityChange = async () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') {
+            await requestWakeLock();
+        }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     document
         .getElementById("startBtn")
         .addEventListener(
             "click",
-            () => {
+            async () => {
                 document
                     .getElementById(
                         "playerContainer"
@@ -349,6 +370,24 @@
                         "startBtn"
                     )
                     .style.display = "none";
+
+                // スリープ防止を有効化
+                await requestWakeLock();
+
+                // メディアセッションの設定（バックグラウンド再生の安定化と通知センター制御）
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: '芋芋無限',
+                        artist: '芋芋',
+                        artwork: [
+                            { src: 'https://placehold.jp/500x500.png?text=芋', sizes: '500x500', type: 'image/png' }
+                        ]
+                    });
+
+                    // 再生/一時停止などのハンドラを設定（iframe内は直接制御できないが、OSに再生中であることを伝える）
+                    navigator.mediaSession.setActionHandler('play', () => { /* YouTubeのiframe内を操作するのは困難だが、再生指示は受け取れる */ });
+                    navigator.mediaSession.setActionHandler('pause', () => { /* 同上 */ });
+                }
             }
         );
 
